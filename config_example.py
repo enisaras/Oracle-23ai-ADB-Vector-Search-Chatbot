@@ -23,9 +23,10 @@ VERBOSE = False
 STREAM_CHAT = False
 
 # Embedding model type
-EMBED_MODEL_TYPE = "OCI"
+EMBED_MODEL_TYPE = "OCI" # DB or OCI
 
 # Embedding model for generating embeddings
+# If using in-database embeddings, Name of the embedding model inside the DB
 EMBED_MODEL = "cohere.embed-english-v3.0"
 
 # Tokenizer for token counting

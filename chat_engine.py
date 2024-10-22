@@ -104,6 +104,8 @@ def create_embedding_model(auth=None):
             truncate="END",
             service_endpoint=ENDPOINT,
         )
+    elif EMBED_MODEL_TYPE == "DB":
+        pass
     return embed_model
 
 # Function to create the chat engine
