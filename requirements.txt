@@ -17,6 +17,7 @@ llama-index-llms-cohere
 llama-index-llms-langchain
 llama-index-llms-mistralai
 llama-index-llms-oci-genai
+llama-index-embeddings-oracleai
 llama-index-llms-openai-like
 llama-index-postprocessor-cohere-rerank
 mock

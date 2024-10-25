@@ -22,6 +22,7 @@ from llama_index.core.node_parser import SentenceSplitter
 import oracledb
 from tokenizers import Tokenizer
 from llama_index.embeddings.oci_genai import OCIGenAIEmbeddings
+from oracle_vectorstore import generate_embeddings_in_db
 from oci_utils import load_oci_config
 
 from config import (
@@ -35,14 +36,13 @@ from config import (
     CHUNK_OVERLAP,
     DB_USER,
     DB_PWD,
-    DB_SERVICE,
-    DB_HOST_IP,
     COMPARTMENT_OCID,
     ENDPOINT,
     DSN,
     WALLET_LOCATION,
     WALLET_PASSWORD,
-    CONFIG_DIR
+    CONFIG_DIR,
+    EMBED_MODEL_TYPE,
 )
 
 BATCH_SIZE = 40
@@ -213,6 +213,7 @@ def compute_embeddings(embed_model, nodes_text):
         List: List of computed embeddings.
     """
     try:
+        # TODO: Could do some playing around with different tokenizers
         cohere_tokenizer = Tokenizer.from_pretrained(TOKENIZER)
         embeddings = []
         for i in tqdm(range(0, len(nodes_text), BATCH_SIZE)):
@@ -366,14 +367,18 @@ def main():
         for file in files_to_process:
             print(file)
         
-
-        embed_model = OCIGenAIEmbeddings(
-            auth_profile=PROFILE_NAME,
-            compartment_id=COMPARTMENT_OCID,
-            model_name=EMBED_MODEL,
-            truncate="END",
-            service_endpoint=ENDPOINT,
-        )
+        if EMBED_MODEL_TYPE == "OCI":
+            # TODO: Refactor
+            embed_model = OCIGenAIEmbeddings(
+                auth_profile=PROFILE_NAME,
+                compartment_id=COMPARTMENT_OCID,
+                model_name=EMBED_MODEL,
+                truncate="END",
+                service_endpoint=ENDPOINT,
+            )
+        elif EMBED_MODEL_TYPE == "DB":
+            print("works")
+            embed_model = generate_embeddings_in_db()
 
         logging.info("Connecting to Oracle 23ai DB...")
 
@@ -413,7 +418,7 @@ def main():
     finally:
         time_elapsed = time.time() - time_start
         print("\nProcessing done !!!")
-        print(f"We have processed {tot_pages} pages and saved text chunks and embeddings in the DB")
+        print(f"Processed {tot_pages} pages and saved text chunks and embeddings in the DB")
         print(f"Total elapsed time: {round(time_elapsed, 0)} sec.")
         print()
 

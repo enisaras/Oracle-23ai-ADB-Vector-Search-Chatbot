@@ -16,8 +16,11 @@ from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.callbacks.global_handlers import set_global_handler
 from llama_index.llms.oci_genai import OCIGenAI
 from llama_index.embeddings.oci_genai import OCIGenAIEmbeddings
+from llama_index.embeddings.oracleai import OracleEmbeddings
 from oci_utils import load_oci_config, print_configuration
 from llama_index.core.llms import ChatMessage
+from oracle_vectorstore import generate_embeddings_in_db
+
 from config import (
     VERBOSE, 
     EMBED_MODEL_TYPE, 
@@ -89,7 +92,7 @@ def create_reranker(auth=None, verbose=VERBOSE, top_n=3):
 
 # Function to create an embedding model
 def create_embedding_model(auth=None):
-    model_list = ["OCI"]
+    model_list = ["OCI", "DB"]
 
     # Validate embedding model choice
     if EMBED_MODEL_TYPE not in model_list:
@@ -105,7 +108,8 @@ def create_embedding_model(auth=None):
             service_endpoint=ENDPOINT,
         )
     elif EMBED_MODEL_TYPE == "DB":
-        pass
+        print("works")
+        embed_model = generate_embeddings_in_db()
     return embed_model
 
 # Function to create the chat engine

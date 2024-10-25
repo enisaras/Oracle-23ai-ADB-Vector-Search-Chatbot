@@ -17,7 +17,7 @@ from llama_index.core.vector_stores.types import (
     VectorStoreQuery,
     VectorStoreQueryResult,
 )
-
+from llama_index.embeddings.oracleai import OracleEmbeddings
 from llama_index.core.schema import TextNode, BaseNode
 
 import oracledb
@@ -25,6 +25,7 @@ import logging
 
 # Load configurations from the config module
 from config import (
+    EMBED_MODEL,
     DB_USER,
     DB_PWD,
     DB_HOST_IP,
@@ -152,6 +153,21 @@ def oracle_query(embed_query: List[float], top_k: int, verbose=True, approximate
         logger.info(f"Query duration: {round(elapsed_time, 1)} sec.")
 
     return q_result
+
+def generate_embeddings_in_db():
+    # TODO make sure the model exists?
+    try:
+        with oracledb.connect(user=DB_USER, password=DB_PWD, dsn=DSN,wallet_location=WALLET_LOCATION, config_dir = CONFIG_DIR, wallet_password=WALLET_PASSWORD) as connection:
+            embedder_params = {"model": "ALL_MINILM_L12_V2"}
+            embedder = OracleEmbeddings(conn=connection, params=embedder_params)
+            # embed = embedder._get_text_embedding("Hello World!")
+        return embedder
+
+    except Exception as e:
+        logger.error(f"Error occurred in generate_embeddings_in_db: {e}")
+        return None
+
+generate_embeddings_in_db()
 
 def save_chunks_with_embeddings_in_db(pages_id,pages_text, pages_num,embeddings, book_id, connection):
     """
