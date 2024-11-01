@@ -20,6 +20,9 @@ COHERE_API_KEY = "<your-cohere-api-key>" # Cohere Reranker api key: https://cohe
 ## This is the default value, you can change this if you have another table or changed 
 ## create_tables.sql
 STORAGE_TABLE = "vector_chat_history"
+USE_REDIS = False
+REDIS_CONN = {"host": <host>, "port": 6379}
+
 # Verbosity setting
 VERBOSE = False
 

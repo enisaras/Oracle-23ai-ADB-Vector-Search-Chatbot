@@ -3,3 +3,4 @@ wallet/
 __pycache__/
 .DS_STORE
 data/
+venv/

@@ -303,7 +303,7 @@ def main():
 
         try:
             logger.info("Calling RAG chain..")
-            f"top_k= {st.session_state.top_k}, type= {type(st.session_state.top_k)}, max_tokens= {st.session_state.max_tokens}, temperature= {st.session_state.temperature},top_n= {st.session_state.top_n},enable_rag= {st.session_state.enable_rag},similarity = {st.session_state.similarity}")
+            logger.info(f"top_k= {st.session_state.top_k}, type= {type(st.session_state.top_k)}, max_tokens= {st.session_state.max_tokens}, temperature= {st.session_state.temperature},top_n= {st.session_state.top_n},enable_rag= {st.session_state.enable_rag},similarity = {st.session_state.similarity}")
 
             with st.spinner("Waiting..."):
                 time_start = time.time()
